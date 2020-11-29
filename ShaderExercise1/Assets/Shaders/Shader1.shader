@@ -18,6 +18,7 @@
 			// Write CG (Shader Language)
 			CGPROGRAM
 			//Properties Redefine 
+			// float(32 bits)、half(16bits)、fixed(11bits)
 			float4 _Color;
 			float4 _Vector;
 			float _Int;
