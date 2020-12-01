@@ -1,4 +1,6 @@
-﻿Shader "Custom/Shader3"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/Shader3"
 {
     Properties
     {
@@ -22,17 +24,30 @@
                 float3 normal : NORMAL; // Use normal to calculate light
                 float4 texcoord : TEXCOORD0; // Use texture coordinate to access texture
             };
+            
+            // Declare vertex shader output 
+            struct v2f
+            {
+                float4 pos : SV_POSITION; // vertex coordinate in Clip space 
+                fixed3 color : COLOR0; // Store color infomation
+            };
 
             //float4 vert(float4 v : POSITION) : SV_POSTION
-            float4 vert(a2v v) : SV_POSITION
+            //float4 vert(a2v v) : SV_POSITION
+            v2f vert(a2v v)
             {
+                v2f output; // Declare output struct
+                output.pos = UnityObjectToClipPos(v.vertex);
+                output.color = v.normal * 0.5 + fixed3(0.5, 0.5, 0.5);
+                return output;
                 //return mul(UNITY_MATRIX_MVP, v); //model space to clip space
-                return UnityObjectToClipPos(v.vertex);
+                //return UnityObjectToClipPos(v.vertex);
             }
 
-            fixed4 frag() : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
-                return fixed4(1.0, 1.0, 1.0, 1.0);
+                //return fixed4(1.0, 1.0, 1.0, 1.0);
+                return fixed4(i.color, 1.0); // i.color to screen
             }
 
             ENDCG
